@@ -14,8 +14,7 @@
     min-height: 100vh;
   }
 
-  /* ── Top bar ── */
-  .topbar {
+    .topbar {
     background: white;
     border-bottom: 1px solid #e4e4e7;
     padding: 0 28px;
@@ -32,7 +31,7 @@
   }
   .topbar-brand span { color: #f97316; }
 
-  /* ── Page body ── */
+ 
   .page { max-width: 900px; margin: 0 auto; padding: 36px 24px; }
 
   .page-header {
@@ -44,7 +43,6 @@
   .page-header h1 { font-size: 20px; font-weight: 600; }
   .page-header p { font-size: 13px; color: #888; margin-top: 2px; }
 
-  /* ── Buttons ── */
   .btn {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
@@ -63,7 +61,6 @@
   .btn-danger:hover { background: #fecaca; }
   .btn-sm { font-size: 12px; padding: 5px 12px; }
 
-  /* ── Posts table ── */
   .table-wrap {
     background: white;
     border: 1px solid #e4e4e7;
@@ -124,9 +121,6 @@
   .empty-state .icon { font-size: 36px; margin-bottom: 12px; }
   .empty-state p { font-size: 14px; }
 
-  /* ══════════════════════════════════════
-     MODAL OVERLAY
-  ══════════════════════════════════════ */
   .modal-overlay {
     display: none;
     position: fixed; inset: 0;
@@ -154,7 +148,6 @@
     to   { opacity: 1; transform: none; }
   }
 
-  /* Modal header */
   .modal-header {
     padding: 18px 22px;
     border-bottom: 1px solid #e4e4e7;
@@ -177,7 +170,6 @@
   }
   .close-btn:hover { background: #f4f4f5; color: #111; }
 
-  /* Modal body — scrollable */
   .modal-body {
     overflow-y: auto;
     flex: 1;
@@ -187,7 +179,6 @@
     gap: 16px;
   }
 
-  /* Modal footer */
   .modal-footer {
     padding: 14px 22px;
     border-top: 1px solid #e4e4e7;
@@ -199,8 +190,6 @@
     border-radius: 0 0 10px 10px;
   }
   .modal-footer-left { font-size: 12px; color: #aaa; }
-
-  /* ── Form fields inside modal ── */
   .field label {
     display: block;
     font-size: 11px;
@@ -234,7 +223,6 @@
   .two-col { display: flex; gap: 12px; }
   .two-col .field { flex: 1; }
 
-  /* Tags */
   .tag-wrap {
     border: 1px solid #e4e4e7;
     border-radius: 6px;
@@ -257,7 +245,7 @@
     min-width: 80px; flex: 1; padding: 2px 4px;
   }
 
-  /* ── Editor inside modal ── */
+
   .editor-wrap {
     border: 1px solid #e4e4e7;
     border-radius: 6px;
@@ -278,7 +266,6 @@
   }
   .editor-controls { display: flex; align-items: center; gap: 10px; }
 
-  /* MD toggle */
   .toggle-row { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #aaa; }
   .switch { position: relative; display: inline-block; width: 32px; height: 18px; }
   .switch input { display: none; }
@@ -296,7 +283,6 @@
   }
   .upload-md-btn:hover { border-color: #888; color: #333; }
 
-  /* Toolbar */
   .toolbar {
     background: white;
     border-bottom: 1px solid #f0f0f0;
@@ -316,7 +302,6 @@
   .tb-btn[data-cmd="bold"] { font-weight: 700; }
   .tb-btn[data-cmd="italic"] { font-style: italic; }
 
-  /* Rich editor */
   #richEditor {
     min-height: 220px;
     max-height: 280px;
@@ -339,7 +324,6 @@
   #richEditor p { margin: 5px 0; }
   #richEditor strong { font-weight: 600; }
 
-  /* MD textarea */
   #mdEditor {
     display: none;
     min-height: 220px;
@@ -354,7 +338,6 @@
     width: 100%; resize: none;
   }
 
-  /* Editor status bar */
   .editor-status {
     padding: 5px 12px;
     border-top: 1px solid #f0f0f0;
@@ -362,7 +345,6 @@
   }
   .editor-status span { font-size: 10px; color: #bbb; }
 
-  /* Link modal (inner, inside the main modal) */
   .link-overlay {
     display: none;
     position: fixed; inset: 0;
@@ -386,7 +368,6 @@
   .link-box input:focus { border-color: #888; }
   .link-box-btns { display: flex; justify-content: flex-end; gap: 8px; }
 
-  /* Toast */
   .toast {
     position: fixed; bottom: 24px; left: 50%;
     transform: translateX(-50%) translateY(12px);
@@ -399,13 +380,11 @@
 </head>
 <body>
 
-<!-- Top bar -->
 <div class="topbar">
   <div class="topbar-brand">open<span>CMS</span></div>
   <span style="font-size:12px;color:#aaa">Blog Posts</span>
 </div>
 
-<!-- Page -->
 <div class="page">
   <div class="page-header">
     <div>
@@ -427,7 +406,6 @@
         </tr>
       </thead>
       <tbody id="postsTableBody">
-        <!-- rows injected here -->
       </tbody>
     </table>
     <div class="empty-state" id="emptyState">
@@ -437,9 +415,7 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     ADD POST MODAL
-══════════════════════════════════════ -->
+
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
 
@@ -453,13 +429,11 @@
 
     <div class="modal-body">
 
-      <!-- Title -->
+  
       <div class="field">
         <label>Title <span style="color:#f97316">*</span></label>
         <input type="text" id="modalTitle" placeholder="Your post title…" autocomplete="off">
       </div>
-
-      <!-- Content editor -->
       <div class="field">
         <div class="editor-wrap">
 
@@ -506,7 +480,6 @@
         </div>
       </div>
 
-      <!-- Excerpt + Status row -->
       <div class="two-col">
         <div class="field">
           <label>Excerpt</label>
@@ -522,7 +495,6 @@
         </div>
       </div>
 
-      <!-- Tags -->
       <div class="field">
         <label>Tags</label>
         <div class="tag-wrap" onclick="document.getElementById('modalTagInput').focus()">
@@ -531,7 +503,7 @@
         </div>
       </div>
 
-    </div><!-- /modal-body -->
+    </div>
 
     <div class="modal-footer">
       <span class="modal-footer-left" id="footerHint">All content is stored as Markdown</span>
@@ -545,7 +517,6 @@
   </div>
 </div>
 
-<!-- Link sub-modal -->
 <div class="link-overlay" id="linkOverlay">
   <div class="link-box">
     <h3>Insert Link</h3>
@@ -762,7 +733,7 @@ function savePost(status) {
     tags:    post.tags,
   });
 
-  /* ── Uncomment when Manav's API is ready ──
+  /* ── API BIT ──
   fetch('http://localhost:8000/posts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
