@@ -768,11 +768,60 @@ function renderTable() {
       <td style="color:#888;font-size:12px">${p.createdAt}</td>
       <td>
         <div class="row-actions">
+          ${p.status === 'draft' ? `<button class="btn btn-ghost btn-sm" onclick="editPost(${p.id})">Edit</button>` : ''}
+          ${p.status === 'published' ? `<button class="btn btn-ghost btn-sm" onclick="previewPost(${p.id})">Preview</button>` : ''}
           <button class="btn btn-ghost btn-sm" onclick="deletePost(${p.id})">Delete</button>
         </div>
       </td>
     </tr>
   `).join('');
+}
+function editPost(id) {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+  // remove it from the list, then open the modal pre-filled
+  posts = posts.filter(p => p.id !== id);
+  renderTable();
+  openModal();
+  setTimeout(() => {
+    document.getElementById('modalTitle').value   = post.title;
+    document.getElementById('modalExcerpt').value = post.excerpt;
+    document.getElementById('modalStatus').value  = post.status;
+    tags = [...post.tags]; renderTags();
+    // load content into markdown mode
+    toggle.checked = true; toggle.dispatchEvent(new Event('change'));
+    mdEditor.value = post.content;
+    updateWordCount();
+  }, 50);
+}
+
+function previewPost(id) {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+  const html = markdownToHtml(post.content);
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <!DOCTYPE html><html><head>
+    <meta charset="UTF-8">
+    <title>${post.title}</title>
+    <style>
+      body { font-family: Georgia, serif; max-width: 680px; margin: 60px auto; padding: 0 24px; color: #111; line-height: 1.75; }
+      h1 { font-size: 32px; margin-bottom: 8px; }
+      h2 { font-size: 22px; margin-top: 32px; }
+      h3 { font-size: 17px; margin-top: 24px; }
+      blockquote { border-left: 3px solid #ddd; padding: 4px 16px; color: #666; font-style: italic; }
+      code { background: #f4f4f5; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+      pre { background: #f4f4f5; padding: 16px; border-radius: 6px; overflow-x: auto; }
+      a { color: #f97316; }
+      .meta { font-size: 13px; color: #aaa; margin-bottom: 32px; }
+    </style>
+    </head><body>
+    <h1>${post.title}</h1>
+    <div class="meta">${post.createdAt} &nbsp;·&nbsp; ${post.status}</div>
+    ${html}
+    </body></html>
+  `);
+  win.document.close();
 }
 
 function deletePost(id) {
