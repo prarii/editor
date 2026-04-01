@@ -1,0 +1,98 @@
+/* HTML → MARKDOWN */
+function htmlToMarkdown(html) {
+  const doc = new DOMParser().parseFromString(`<body>${html}</body>`, 'text/html');
+  return walkNode(doc.body).trim();
+}
+
+function walkNode(node) {
+  if (node.nodeType === Node.TEXT_NODE) return node.textContent;
+  if (node.nodeType !== Node.ELEMENT_NODE) return '';
+
+  const tag = node.tagName.toLowerCase();
+  const inner = () => Array.from(node.childNodes).map(walkNode).join('');
+
+  switch(tag) {
+    case 'h1': return `\n# ${inner()}\n`;
+    case 'h2': return `\n## ${inner()}\n`;
+    case 'p':  return `\n${inner()}\n`;
+    case 'br': return '\n';
+    case 'strong':
+    case 'b': return `**${inner()}**`;
+    case 'em':
+    case 'i': return `*${inner()}*`;
+    case 's':
+    case 'strike': return `~~${inner()}~~`;
+    case 'blockquote': return `\n> ${inner().trim()}\n`;
+    case 'ul':
+      return '\n' + Array.from(node.children)
+        .map(li => `- ${walkNode(li).trim()}`)
+        .join('\n') + '\n';
+    case 'ol':
+      return '\n' + Array.from(node.children)
+        .map((li,i) => `${i+1}. ${walkNode(li).trim()}`)
+        .join('\n') + '\n';
+    case 'li': return inner();
+    default: return inner();
+  }
+}
+
+/* MARKDOWN → HTML */
+function markdownToHtml(md) {
+  const lines = md.split('\n');
+  const out = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    const h1 = line.match(/^# (.+)/);
+    const h2 = line.match(/^## (.+)/);
+
+    if (h1) { out.push(`<h1>${inl(h1[1])}</h1>`); i++; continue; }
+    if (h2) { out.push(`<h2>${inl(h2[1])}</h2>`); i++; continue; }
+
+    if (line.startsWith('> ')) {
+      out.push(`<blockquote>${inl(line.slice(2))}</blockquote>`);
+      i++; continue;
+    }
+
+    if (/^[-*+] /.test(line)) {
+      const items = [];
+      while (i < lines.length && /^[-*+] /.test(lines[i])) {
+        items.push(`<li>${inl(lines[i].replace(/^[-*+] /,''))}</li>`);
+        i++;
+      }
+      out.push(`<ul>${items.join('')}</ul>`);
+      continue;
+    }
+
+    if (/^\d+\. /.test(line)) {
+      const items = [];
+      while (i < lines.length && /^\d+\. /.test(lines[i])) {
+        items.push(`<li>${inl(lines[i].replace(/^\d+\. /,''))}</li>`);
+        i++;
+      }
+      out.push(`<ol>${items.join('')}</ol>`);
+      continue;
+    }
+
+    if (line.trim() === '') {
+      out.push('');
+      i++;
+      continue;
+    }
+
+    out.push(`<p>${inl(line)}</p>`);
+    i++;
+  }
+
+  return out.join('\n');
+}
+
+/* INLINE */
+function inl(t) {
+  return t
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/~~(.+?)~~/g,'<strike>$1</strike>');
+}
